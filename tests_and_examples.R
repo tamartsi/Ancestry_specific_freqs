@@ -7,6 +7,10 @@ probs <- prop_mat %*% true_freqs
 allele_count <- rbinom(length(probs), 2, probs )
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.05, high_freq_bound = 0.95)
 
+# this sometimes fails: 
+estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_bound = 0.9999) 
+# with smoothing, this works:
+estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_bound = 0.9999, use_smoothing_data = TRUE)
 
 
 estimate_frequencies_w_known_freqs(allele_count, prop_mat, known_freqs = c(eur=0.1))

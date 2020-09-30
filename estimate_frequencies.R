@@ -3,10 +3,17 @@
 # and an n x d matrix matrix prop_mat giving, for each of n people, d ancestral ancestry proportion
 # at the locus (could be genome-wide) for d ancestries. 
 estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95, 
-                                 low_freq_bound = 0.001, high_freq_bound = 0.999){
+                                 low_freq_bound = 0.001, high_freq_bound = 0.999,
+                                 use_smoothing_data = FALSE){
   stopifnot(length(allele_counts) == nrow(prop_mat))
   
   prop_mat <- as.matrix(prop_mat)
+  
+  if (use_smoothing_data){
+    smoothing_data <- .generate_smoothing_observations(colnames(prop_mat))
+    prop_mat <- rbind(prop_mat, smoothing_data$simulated_prop_mat)
+    allele_counts <- c(allele_counts, smoothing_data$simulated_allele_count)
+  }
   
   decomposed_alleles <- sapply( allele_counts,decompose_two_alleles_one_person)
   decomposed_alleles <- as.numeric(matrix(decomposed_alleles)	)

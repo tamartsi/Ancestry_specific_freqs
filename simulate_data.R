@@ -41,7 +41,7 @@ simulate_data <- function( eff_n_anc, maf_anc ,lai_length =0.05, names_anc = NUL
   
   lai_df_rm_first <- lai_df[-which(lai_df$lai_num %in% lai_copy_1_df$lai_num)]
   
-  lai_copy_2_df <- lai_df[, choose_obs(lai_num), by = c("person_id")]
+  lai_copy_2_df <- lai_df_rm_first[, choose_obs(lai_num), by = c("person_id")]
   setnames(lai_copy_2_df, "V1", "lai_num")
   lai_copy_2_df <- merge(lai_copy_2_df, lai_df[, c("lai_num", "lai_anc")], by = "lai_num")
   
@@ -68,8 +68,8 @@ simulate_data <- function( eff_n_anc, maf_anc ,lai_length =0.05, names_anc = NUL
   dat <- merge(dat, table_anc_freq[,c("lai_copy2_anc", "lai_copy2_freq"), with = FALSE], 
                by = "lai_copy2_anc", keep = "all")
   
-  dat[, allele_copy1 := rbinom(1, size = 1, prob = lai_copy1_freq) ]
-  dat[, allele_copy2 := rbinom(1, size = 1, prob = lai_copy2_freq) ]
+  dat[, allele_copy1 := rbinom(1, size = 1, prob = lai_copy1_freq) , by = "person_id"]
+  dat[, allele_copy2 := rbinom(1, size = 1, prob = lai_copy2_freq), by = "person_id" ]
   
   dat[,allele_count := allele_copy1 + allele_copy2]
   

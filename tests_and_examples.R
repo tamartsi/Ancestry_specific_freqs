@@ -15,4 +15,9 @@ estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_b
 
 estimate_frequencies_w_known_freqs(allele_count, prop_mat, known_freqs = c(eur=0.1))
 
+# with smoothing: 
+estimate_frequencies_w_known_freqs(allele_count, prop_mat, known_freqs = c(eur=0.2), 
+                                                       use_smoothing_data = TRUE)
+
+
 estimate_frequencies_w_known_freqs(allele_count, prop_mat, known_freqs = c(eur=0.1, afr = 0.8))

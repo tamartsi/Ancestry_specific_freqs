@@ -8,16 +8,20 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   stopifnot(length(allele_counts) == nrow(prop_mat))
   
   prop_mat <- as.matrix(prop_mat)
-  
-  if (use_smoothing_data){
-    smoothing_data <- .generate_smoothing_observations(colnames(prop_mat))
-    prop_mat <- rbind(prop_mat, smoothing_data$simulated_prop_mat)
-    allele_counts <- c(allele_counts, smoothing_data$simulated_allele_count)
-  }
-  
+ 
+  # turn each allele dosage into a two rows, each reporting one allele
+  # with the same proportion ancestries.
   decomposed_alleles <- sapply( allele_counts,decompose_two_alleles_one_person)
   decomposed_alleles <- as.numeric(matrix(decomposed_alleles)	)
   prop_mat_double <- prop_mat[rep(1:nrow(prop_mat), each = 2),]
+  
+  
+  if (use_smoothing_data){
+    smoothing_data <- .generate_smoothing_observations(colnames(prop_mat))
+    prop_mat <- rbind(prop_mat_double, smoothing_data$simulated_prop_mat)
+    allele_counts <- c(decomposed_alleles, smoothing_data$simulated_allele_count)
+  }
+  
   
   ## compute the negative log likelihood function
   nll <- function(freqs){

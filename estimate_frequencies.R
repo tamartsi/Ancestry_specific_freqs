@@ -15,7 +15,7 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   decomposed_alleles <- as.numeric(matrix(decomposed_alleles)	)
   prop_mat_double <- prop_mat[rep(1:nrow(prop_mat), each = 2),]
   
-  
+  # add made-up data to avoid boundaries of the frequency parameter space   
   if (use_smoothing_data){
     smoothing_data <- .generate_smoothing_observations(colnames(prop_mat))
     prop_mat <- rbind(prop_mat_double, smoothing_data$simulated_prop_mat)

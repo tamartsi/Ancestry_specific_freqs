@@ -5,6 +5,12 @@ rowSums(prop_mat) # all are 1.
 true_freqs <- c(eur =0.2, afr = 0.8, amr = 0.2)
 probs <- prop_mat %*% true_freqs
 allele_count <- rbinom(length(probs), 2, probs )
+
+# check internal function: 
+.prep_dat_for_binary_likelihood(allele_count, prop_mat)
+
+
+
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.05, high_freq_bound = 0.95)
 
 # this sometimes fails: 

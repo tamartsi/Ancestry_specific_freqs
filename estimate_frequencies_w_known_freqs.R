@@ -7,17 +7,17 @@
 # in known_freq are some of the column names of prop_mat. 
 estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_freqs, confidence = 0.95, 
                                             low_freq_bound = 0.001, high_freq_bound = 0.999,
-                                            use_smoothing_data = FALSE){
+                                            use_smoothing_data = FALSE,
+                                            chromosome_x = FALSE,
+                                            sex = NULL, 
+                                            male_label = "M"){
   
   stopifnot(length(allele_counts) == nrow(prop_mat))
   stopifnot(all(is.element(names(known_freqs), colnames(prop_mat))))
   stopifnot(length(known_freqs) > 0 & length(known_freqs) < ncol(prop_mat))
-
-  # turn each allele dosage into a two rows, each reporting one allele
-  # with the same proportion ancestries.  
-  decomposed_alleles <- sapply( allele_counts,decompose_two_alleles_one_person)
-  decomposed_alleles <- as.numeric(matrix(decomposed_alleles)	)
+  if (!all(allele_counts %in% c(0,1,2))) stop("Some allele counts are not 0,1,2")
   
+  prop_mat <- as.matrix(prop_mat)
   
   # re-order the column so that the ones with known frequencies are at the beginning:
   n_known <- length(known_freqs)
@@ -25,7 +25,16 @@ estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_fr
   inds_known <- which(is.element(colnames(prop_mat), names(known_freqs)))
   inds_unknown <- setdiff(1:ncol(prop_mat), inds_known)
   prop_mat <- prop_mat[,c(inds_known, inds_unknown)]
-  prop_mat_double <- prop_mat[rep(1:nrow(prop_mat), each = 2),]
+  
+  prep_dat <- .prep_dat_for_binary_likelihood(allele_counts, prop_mat,
+                                              chromosome_x = FALSE,
+                                              sex = NULL, 
+                                              male_label = "M")
+  
+  prop_mat_double <- prep_dat$prop_mat_double
+  decomposed_alleles <- prep_dat$decomposed_alleles
+  
+
 
   # add made-up data to avoid boundaries of the frequency parameter space 
   if (use_smoothing_data){

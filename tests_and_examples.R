@@ -9,7 +9,7 @@ allele_count <- rbinom(length(probs), 2, probs )
 # check internal function: 
 .prep_dat_for_binary_likelihood(allele_count, prop_mat)
 
-
+.prep_dat_for_binomial_likelihood(allele_count, prop_mat)
 
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.05, high_freq_bound = 0.95)
 

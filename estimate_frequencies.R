@@ -11,7 +11,6 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
                                  sex = NULL, 
                                  male_label = "M"){
   stopifnot(length(allele_counts) == nrow(prop_mat))
-  if (!all(allele_counts %in% c(0,1,2))) stop("Some allele counts are not 0,1,2")
   
   prop_mat <- as.matrix(prop_mat)
   
@@ -36,7 +35,7 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   ## compute the negative log likelihood function
   nll <- function(freqs){
     allele_probs <- as.numeric(prop_mat %*% freqs)
-    nll_by_obs <- log(dbinom(allele_counts, max_counts, allele_probs))
+    nll_by_obs <- log(dbinom_approx(allele_counts, max_counts, allele_probs))
     return(-sum(nll_by_obs))		
   }
   
@@ -56,7 +55,6 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   
   return(res)
 }
-
 
 
 

@@ -7,7 +7,8 @@ choose_obs <- function(x){
 # simulate data by first generating global ancestry proportion, then computing 
 # the expected value of allele probability per person, and sampling from this
 # probability
-simulate_data <- function( eff_n_anc, maf_anc ,lai_length =0.05, names_anc = NULL){
+simulate_data <- function(eff_n_anc, maf_anc ,lai_length =0.05, names_anc = NULL, 
+                           error_rate = 0){
   stopifnot(floor(sum(eff_n_anc)) - sum(eff_n_anc) == 0 , length(maf_anc) == length(eff_n_anc))
   stopifnot( all(floor(eff_n_anc/lai_length) - eff_n_anc/lai_length  ==0))
   # LAI are of fixed length of 5% of the genome.
@@ -80,15 +81,55 @@ simulate_data <- function( eff_n_anc, maf_anc ,lai_length =0.05, names_anc = NUL
                                       as.numeric(dat$lai_copy2_anc == anc)
   }
   
+  
+  # In case we want to induce errors, generate another dataset with errors:
+  if (error_rate >0){
+    sample_inds_err_copy1 <- sample(1:nrow(dat), size= floor(nrow(dat)*error_rate))
+    sample_inds_err_copy2 <- sample(1:nrow(dat), size= floor(nrow(dat)*error_rate))
+    
+    dat$lai_copy1_anc_err <- dat$lai_copy1_anc
+    dat$lai_copy2_anc_err <- dat$lai_copy2_anc
+    for (i in 1:length(sample_inds_err_copy1)){
+      cur_ind <- sample_inds_err_copy1[i]
+      cur_anc <- dat$lai_copy1_anc_err[cur_ind]
+      dat$lai_copy1_anc_err[cur_ind] <- sample(setdiff( names_anc, cur_anc), 1)
+      
+      cur_anc <- dat$lai_copy2_anc_err[cur_ind]
+      dat$lai_copy2_anc_err[cur_ind] <- sample(setdiff( names_anc, cur_anc), 1)
+    }
+    
+    for (anc in names_anc){
+      dat[[paste0(anc, "_count_err")]] <- as.numeric(dat$lai_copy1_anc_err == anc) + 
+        as.numeric(dat$lai_copy2_anc_err == anc)
+    }
+    
+  }
+  
+
+  
   ## now return three datasets:
   # prop_anc: proportion ancestries
   # allele_count: genotype allele count
-  # lai_count: lai allele counts, when the genotype from 2 is in the lai. 
+  # lai_count: lai allele counts, when the genotype from allele_count is in the lai. 
+  
+  # if a dataset with error was requested, return this too
 
   prop_anc <- as.data.frame(dat[,c("person_id", names_anc), with = FALSE])
   allele_count <- as.data.frame(dat[,c("person_id", "allele_count"), with = FALSE])
   lai_count <- as.data.frame(dat[,c("person_id", paste0(names_anc, "_count")), with = FALSE])
-  return(list(prop_anc = prop_anc, allele_count = allele_count, lai_count = lai_count))
+  
+  if (error_rate == 0){
+    return(list(prop_anc = prop_anc, 
+                allele_count = allele_count, 
+                lai_count = lai_count))
+  } else{
+    lai_count_err <- as.data.frame(dat[,c("person_id", paste0(names_anc, "_count_err")), with = FALSE])
+    return(list(prop_anc = prop_anc, 
+                allele_count = allele_count, 
+                lai_count = lai_count, 
+                lai_count_err = lai_count_err))
+  }
+  
   
 }
 
@@ -97,3 +138,5 @@ eff_n_anc <- c(9, 11, 80)
 maf_anc <- c(0.5, 0.3, 0.2)
 
 dat <- simulate_data(eff_n_anc , maf_anc)
+
+dat <- simulate_data(eff_n_anc , maf_anc, error_rate = 0.05)

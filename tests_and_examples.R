@@ -21,6 +21,19 @@ estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_b
 
 estimate_frequencies_w_known_freqs(allele_count, prop_mat, known_freqs = c(eur=0.1))
 
+# with missing values: 
+prop_mat_na <- prop_mat
+prop_mat_na[3,2] <- NA
+estimate_frequencies_w_known_freqs(allele_count, prop_mat_na, known_freqs = c(eur=0.1))
+estimate_frequencies(allele_count, prop_mat_na)
+
+# missing values also of allele_count:
+allele_count_na <- allele_count
+allele_count_na[5] <- NA
+estimate_frequencies_w_known_freqs(allele_count_na, prop_mat_na, known_freqs = c(eur=0.1))
+estimate_frequencies(allele_count_na, prop_mat_na)
+
+
 # with smoothing: 
 estimate_frequencies_w_known_freqs(allele_count, prop_mat, known_freqs = c(eur=0.2), 
                                                        use_smoothing_data = TRUE)

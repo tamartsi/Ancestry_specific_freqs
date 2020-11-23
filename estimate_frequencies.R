@@ -14,6 +14,16 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   
   prop_mat <- as.matrix(prop_mat)
   
+  # check for NAs, if there are observations with missging values, remove them.
+  inds_na_alleles <- which(is.na(allele_counts))
+  inds_na_prop <- which(apply(prop_mat, 1, function(x) sum(is.na(x))) > 0)
+  inds_na <- c(inds_na_alleles, inds_na_prop)
+  if (length(inds_na) >0){
+    message(paste(length(inds_na), "observations with missing values, removing them..."))
+    allele_counts <- allele_counts[-inds_na]
+    prop_mat <- prop_mat[-inds_na,]
+  }
+  
   prep_dat <- .prep_dat_for_binomial_likelihood(allele_counts, prop_mat,
                                               chromosome_x = chromosome_x,
                                               sex = sex, 

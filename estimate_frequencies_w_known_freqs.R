@@ -20,6 +20,16 @@ estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_fr
   
   prop_mat <- as.matrix(prop_mat)
   
+  # check for NAs, if there are observations with missging values, remove them.
+  inds_na_alleles <- which(is.na(allele_counts))
+  inds_na_prop <- which(apply(prop_mat, 1, function(x) sum(is.na(x))) > 0)
+  inds_na <- c(inds_na_alleles, inds_na_prop)
+  if (length(inds_na) >0){
+    message(paste(length(inds_na), "observations with missing values, removing them..."))
+    allele_counts <- allele_counts[-inds_na]
+    prop_mat <- prop_mat[-inds_na,]
+  }
+  
   # re-order the column so that the ones with known frequencies are at the beginning:
   n_known <- length(known_freqs)
   n_unknown <- ncol(prop_mat) - n_known

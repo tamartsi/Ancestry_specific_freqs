@@ -23,8 +23,8 @@
     
     # merge male and females:
     prop_mat <- rbind(male_props, female_props)
-    allele_counts <- c(male_counts, females_counts)
-    max_counts <- c(rep(1, nrow(male_counts)), rep(2, nrow(female_counts)))
+    allele_counts <- c(male_counts, female_counts)
+    max_counts <- c(rep(1, length(male_counts)), rep(2, length(female_counts)))
   } else{  # not chromosome X
     
     # just add max_count

@@ -10,12 +10,12 @@
     male_counts <- allele_counts[which(sex == male_label)]
     male_props <- prop_mat[which(sex == male_label),]
     
-    # check that male counts are only zeros and ones, and not two.
-    # if there are counts of two, turn them to one.
-    inds_two <- which(male_counts == 2)
-    if (length(inds_two) > 0){
-      message("some male allele counts are equal to 2, setting them to 1...")
-      male_counts[inds_two] <- 1
+    # check that male counts are not higher than one (imputed data may have fractions)
+    # if some dosages are higher than 1, divided all dosages/counts by 2. 
+    max_male_dosage <- max(male_counts)
+    if (max_male_dosage > 1){
+      message("some male allele counts/dosages are larger than 1, dividing all counts by two...")
+      male_counts <- male_counts/2
     }
     
     female_counts <- allele_counts[which(sex != male_label)]

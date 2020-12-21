@@ -9,7 +9,8 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
                                  use_smoothing_data = FALSE,
                                  chromosome_x = FALSE,
                                  sex = NULL, 
-                                 male_label = "M"){
+                                 male_label = "M", 
+                                 mac_filter = 5){
   stopifnot(length(allele_counts) == nrow(prop_mat))
   
   prop_mat <- as.matrix(prop_mat)
@@ -32,6 +33,10 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   prop_mat <- prep_dat$prop_mat
   allele_counts <- prep_dat$allele_counts
   max_counts <- prep_dat$max_counts
+  
+  # check if the number of minor alleles is higher than the mac_filter,
+  # stop if MAC is too low.
+  stopifnot(min(sum(allele_counts), sum(max_counts) - sum(allele_counts)) > mac_filter)
   
   # add made-up data to avoid boundaries of the frequency parameter space   
   if (use_smoothing_data){

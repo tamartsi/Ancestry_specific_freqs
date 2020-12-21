@@ -12,7 +12,8 @@ estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_fr
                                             use_smoothing_data = FALSE,
                                             chromosome_x = FALSE,
                                             sex = NULL, 
-                                            male_label = "M"){
+                                            male_label = "M",
+                                            mac_filter = 5){
   
   stopifnot(length(allele_counts) == nrow(prop_mat))
   stopifnot(all(is.element(names(known_freqs), colnames(prop_mat))))
@@ -20,7 +21,7 @@ estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_fr
   
   prop_mat <- as.matrix(prop_mat)
   
-  # check for NAs, if there are observations with missging values, remove them.
+  # check for NAs, if there are observations with missing values, remove them.
   inds_na_alleles <- which(is.na(allele_counts))
   inds_na_prop <- which(apply(prop_mat, 1, function(x) sum(is.na(x))) > 0)
   inds_na <- c(inds_na_alleles, inds_na_prop)
@@ -46,6 +47,9 @@ estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_fr
   allele_counts <- prep_dat$allele_counts
   max_counts <- prep_dat$max_counts
   
+  # check if the number of minor alleles is higher than the mac_filter,
+  # stop if MAC is too low.
+  stopifnot(min(sum(allele_counts), sum(max_counts) - sum(allele_counts)) > mac_filter)
 
   # add made-up data to avoid boundaries of the frequency parameter space 
   if (use_smoothing_data){

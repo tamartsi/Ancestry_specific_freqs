@@ -29,6 +29,7 @@ estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_fr
     message(paste(length(inds_na), "observations with missing values, removing them..."))
     allele_counts <- allele_counts[-inds_na]
     prop_mat <- prop_mat[-inds_na,]
+    sex <- sex[-inds_na]
   }
   
   # re-order the column so that the ones with known frequencies are at the beginning:

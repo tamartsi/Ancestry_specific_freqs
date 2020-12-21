@@ -23,6 +23,7 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
     message(paste(length(inds_na), "observations with missing values, removing them..."))
     allele_counts <- allele_counts[-inds_na]
     prop_mat <- prop_mat[-inds_na,]
+    sex <- sex[-inds_na]
   }
   
   prep_dat <- .prep_dat_for_binomial_likelihood(allele_counts, prop_mat,

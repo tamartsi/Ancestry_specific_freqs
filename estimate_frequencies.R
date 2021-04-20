@@ -69,7 +69,7 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
                     high_CI= estimated_freqs + ses*sqrt(qchisq(confidence, 1)))
   
   # return the estimated frequencies, and the negative log likelihood. 
-  return(list(res = res, nll = fit$par))
+  return(list(res = res, nll = nll(res$estimated_freq)))
 }
 
 

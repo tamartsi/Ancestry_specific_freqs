@@ -10,7 +10,9 @@ allele_count <- rbinom(length(probs), 2, probs )
 
 .prep_dat_for_binomial_likelihood(allele_count, prop_mat)
 
+
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.05, high_freq_bound = 0.95)
+estimate_frequencies_search_boundary(allele_count, prop_mat)
 
 # this sometimes fails: 
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_bound = 0.9999) 

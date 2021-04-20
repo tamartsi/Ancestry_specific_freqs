@@ -1,5 +1,4 @@
-## UPDATE: using Binomial distribution instead of Bernoulli.
-##
+
 # Function to estimate ancestry-specific allele frequencies for a given variant.
 # takes a vector of allele_counts allele counts for a given variant for n people 
 # and an n x d matrix prop_mat giving, for each of n people, d ancestral ancestry proportion
@@ -15,7 +14,7 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   
   prop_mat <- as.matrix(prop_mat)
   
-  # check for NAs, if there are observations with missging values, remove them.
+  # check for NAs, if there are observations with missing values, remove them.
   inds_na_alleles <- which(is.na(allele_counts))
   inds_na_prop <- which(apply(prop_mat, 1, function(x) sum(is.na(x))) > 0)
   inds_na <- c(inds_na_alleles, inds_na_prop)
@@ -69,7 +68,8 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
                     low_CI = estimated_freqs - ses*sqrt(qchisq(confidence, 1)), 
                     high_CI= estimated_freqs + ses*sqrt(qchisq(confidence, 1)))
   
-  return(res)
+  # return the estimated frequencies, and the negative log likelihood. 
+  return(list(res = res, nll = fit$par))
 }
 
 

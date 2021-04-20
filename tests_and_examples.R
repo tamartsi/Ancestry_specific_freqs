@@ -7,7 +7,6 @@ probs <- prop_mat %*% true_freqs
 allele_count <- rbinom(length(probs), 2, probs )
 
 # check internal function: 
-.prep_dat_for_binary_likelihood(allele_count, prop_mat)
 
 .prep_dat_for_binomial_likelihood(allele_count, prop_mat)
 
@@ -17,6 +16,13 @@ estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.05, high_freq_bou
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_bound = 0.9999) 
 # with smoothing, this works:
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_bound = 0.9999, use_smoothing_data = TRUE)
+
+# one frequency is 0:
+true_freqs <- c(eur =0.2, afr = 0.8, amr = 0)
+probs <- prop_mat %*% true_freqs
+allele_count <- rbinom(length(probs), 2, probs )
+estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_bound = 0.9999, use_smoothing_data = TRUE)
+estimate_frequencies_w_known_freqs(allele_count, prop_mat, known_freqs = c(amr=0), mac_filter = 1)
 
 
 estimate_frequencies_w_known_freqs(allele_count, prop_mat, known_freqs = c(eur=0.1))

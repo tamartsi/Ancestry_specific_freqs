@@ -14,7 +14,27 @@ estimate_frequencies_search_boundary <- function(allele_counts, prop_mat, confid
                                  male_label = "M", 
                                  mac_filter = 5){
   
+  # prepare data.frame wor return null results if the function didn't ran
+  return_val_not_run <- data.frame(ancestry = colnames(prop_mat),
+                                   estimated_freq = NA,
+                                   low_CI = NA,
+                                   high_CI = NA)
+  
+   # check that MAC is higher than mac_filter
+  prep_dat <- .prep_dat_for_binomial_likelihood(allele_counts, prop_mat,
+                                                chromosome_x = chromosome_x,
+                                                sex = sex, 
+                                                male_label = male_label)
+  
+  prop_mat <- prep_dat$prop_mat
+  allele_counts <- prep_dat$allele_counts
+  max_counts <- prep_dat$max_counts
+  
 
+  
+  if (min(sum(allele_counts), sum(max_counts) - sum(allele_counts)) <= mac_filter){
+    return(return_val_not_run)
+  }
   
   # start loop to find boundaries in which the analysis converges:
   converged <- FALSE
@@ -43,9 +63,12 @@ estimate_frequencies_search_boundary <- function(allele_counts, prop_mat, confid
     }
   }
   
+  
+  if (!converged) return(return_val_not_run)
+  
   # check if convergence is right at the boundary condition
-  low_bound_inds <- which(cur_res$estimated_freq == low_freq_bound)
-  high_bound_inds <- which(cur_res$estimated_freq == high_freq_bound)
+  low_bound_inds <- which(cur_res$res$estimated_freq == low_freq_bound)
+  high_bound_inds <- which(cur_res$res$estimated_freq == high_freq_bound)
   
   if (length(low_bound_inds) > 0 | length(high_bound_inds) > 0){
   # if frequencies for some ancestries were estimated right at the lower bound:
@@ -72,7 +95,7 @@ estimate_frequencies_search_boundary <- function(allele_counts, prop_mat, confid
   # parameter space.
   if (length(known_freqs) > 0){
     boundary_res <- estimate_frequencies_w_known_freqs(allele_counts, prop_mat, 
-                                                       known_freqs, cconfidence, 
+                                                       known_freqs, confidence, 
                                                        low_freq_bound = frequency_boundary_grid[1], 
                                                        high_freq_bound = 1-frequency_boundary_grid[1],
                                                        use_smoothing_data = use_smoothing_data,
@@ -81,12 +104,18 @@ estimate_frequencies_search_boundary <- function(allele_counts, prop_mat, confid
                                                        male_label = male_label, 
                                                        mac_filter = mac_filter)
     
-    if (boundary_res$nll < cur_res$nll) return(boundary_res$res)
-  }
+    if (boundary_res$nll < cur_res$nll) {
+      # we need to return the new result, with the estimated 
+      # frequency for the ancestry with boundary value set to that value
+      return_val <- return_val_not_run
+      return_val[match(boundary_res$res$ancestry, return_val$ancestry),] <- boundary_res$res
+      return_val[match(names(known_freqs), return_val$ancestry),"estimated_freq"] <- known_freqs
+      return(return_val)
+    }
   }  
   
   return(cur_res$res)
-}
+}}
 
 
 

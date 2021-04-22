@@ -6,7 +6,7 @@
 # if frequencies for some ancestries are estimated at the set boundary conditions,
 # compares the likelihood to the likelihood when the frequencies are set at the 
 # boundaries of the parameter space (0 or 1, as needed).
-estimate_frequencies_search_boundary <- function(allele_counts, prop_mat, confidence = 0.95, 
+estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confidence = 0.95, 
                                  frequency_boundary_grid = c(0.001, 0.01, 0.02, 0.05),
                                  use_smoothing_data = TRUE,
                                  chromosome_x = FALSE,

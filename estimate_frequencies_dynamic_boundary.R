@@ -13,6 +13,21 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
                                  sex = NULL, 
                                  male_label = "M", 
                                  mac_filter = 5){
+ 
+  stopifnot(length(allele_counts) == nrow(prop_mat))
+  
+  prop_mat <- as.matrix(prop_mat)
+  
+  # check for NAs, if there are observations with missing values, remove them.
+  inds_na_alleles <- which(is.na(allele_counts))
+  inds_na_prop <- which(apply(prop_mat, 1, function(x) sum(is.na(x))) > 0)
+  inds_na <- c(inds_na_alleles, inds_na_prop)
+  if (length(inds_na) >0){
+    message(paste(length(inds_na), "observations with missing values, removing them..."))
+    allele_counts <- allele_counts[-inds_na]
+    prop_mat <- prop_mat[-inds_na,]
+    sex <- sex[-inds_na]
+  }
   
   # prepare data.frame for returning null results if the function doesn't run
   # or does not converge
@@ -32,13 +47,21 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
   max_counts <- prep_dat$max_counts
   
 
-  
   if (min(sum(allele_counts), sum(max_counts) - sum(allele_counts)) <= mac_filter){
     return(list(res = return_val_not_run, 
                 nll = NA,
                 boundary = NA, 
                 flag = "MAC filter"))
   }
+  
+  # add made-up data to avoid boundaries of the frequency parameter space   
+  if (use_smoothing_data){
+    smoothing_data <- .generate_smoothing_observations(colnames(prop_mat))
+    prop_mat <- rbind(prop_mat, smoothing_data$simulated_prop_mat)
+    allele_counts <- c(allele_counts, smoothing_data$simulated_allele_count)
+    max_counts <- c(max_counts, rep(1, nrow(smoothing_data$simulated_prop_mat)))
+  }
+  
   
   # start loop to find boundaries in which the analysis converges:
   converged <- FALSE
@@ -48,14 +71,13 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
     high_freq_bound <- 1 - frequency_boundary_grid[ind_grid]
     ## optimize to estimate frequencies
     
-    cur_res <- tryCatch({estimate_frequencies(allele_counts, prop_mat, confidence = confidence, 
-                                    low_freq_bound = low_freq_bound, 
-                                    high_freq_bound = high_freq_bound,
-                                    use_smoothing_data = use_smoothing_data,
-                                    chromosome_x = chromosome_x,
-                                    sex = sex, 
-                                    male_label = male_label, 
-                                    mac_filter = mac_filter)},
+    cur_res <- tryCatch({.estimate_frequencies_after_prep(allele_counts, 
+                                                          prop_mat, 
+                                                          max_counts,
+                                                          freqs,
+                                                          low_freq_bound,
+                                                          high_freq_bound,
+                                                          confidence)},
                         error = function(error){
                           "not converged"
                         }
@@ -133,17 +155,18 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
   }
   
   # at this point: some frequencies but not all were estimated at the boundary
-   
-  boundary_res <- estimate_frequencies_w_known_freqs(allele_counts, prop_mat, 
-                                                       set_freqs, confidence, 
-                                                       low_freq_bound = frequency_boundary_grid[1], 
-                                                       high_freq_bound = 1-frequency_boundary_grid[1],
-                                                       use_smoothing_data = use_smoothing_data,
-                                                       chromosome_x = chromosome_x,
-                                                       sex = sex, 
-                                                       male_label = male_label, 
-                                                       mac_filter = mac_filter)
-    
+  boundary_res <- 
+    .estimate_frequencies_w_known_freq_after_prep(allele_counts = allele_counts, 
+                                                  prop_mat = prop_mat, 
+                                                  max_counts = max_counts,
+                                                  known_freqs= set_freqs, 
+                                                  n_unknown = ncol(prop_mat) - length(set_freqs),
+                                                  n_known = length(set_freqs),
+                                                  low_freq_bound = requency_boundary_grid[1], 
+                                                  high_freq_bound = 1-frequency_boundary_grid[1],
+                                                  confidence = confidence)
+
+  
     if (boundary_res$nll < cur_res$nll) {
       # we need to return the new result, with the estimated 
       # frequency for the ancestry with boundary value set to that value

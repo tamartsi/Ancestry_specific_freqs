@@ -47,6 +47,25 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   }
   
   
+ 
+  return(.estimate_frequencies_after_prep(allele_counts, 
+                                          prop_mat, 
+                                          max_counts,
+                                          freqs,
+                                          low_freq_bound,
+                                          high_freq_bound,
+                                          confidence))
+}
+
+
+## separate function that is called after checks and preparations were done
+.estimate_frequencies_after_prep <- function(allele_counts,
+                                             prop_mat, 
+                                             max_counts,
+                                             freqs,
+                                             low_freq_bound,
+                                             high_freq_bound,
+                                             confidence){
   ## compute the negative log likelihood function
   nll <- function(freqs){
     allele_probs <- as.numeric(prop_mat %*% freqs)
@@ -70,9 +89,8 @@ estimate_frequencies <- function(allele_counts, prop_mat, confidence = 0.95,
   
   # return the estimated frequencies, and the negative log likelihood. 
   return(list(res = res, nll = nll(res$estimated_freq)))
+  
 }
-
-
 
 
 

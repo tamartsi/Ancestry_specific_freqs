@@ -12,12 +12,12 @@ allele_count <- rbinom(length(probs), 2, probs )
 
 
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.05, high_freq_bound = 0.95)
-estimate_frequencies_search_boundary(allele_count, prop_mat)
+estimate_frequencies_dynamic_boundary(allele_count, prop_mat)
 
 true_freqs <- c(eur =0.2, afr = 0.8, amr = 0)
 probs <- prop_mat %*% true_freqs
 allele_count <- rbinom(length(probs), 2, probs )
-estimate_frequencies_search_boundary(allele_count, prop_mat)
+estimate_frequencies_dynamic_boundary(allele_count, prop_mat)
 
 # this sometimes fails: 
 estimate_frequencies(allele_count, prop_mat,low_freq_bound = 0.0001, high_freq_bound = 0.9999) 

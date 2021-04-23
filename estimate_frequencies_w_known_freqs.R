@@ -7,7 +7,8 @@
 # at the locus (could be genome-wide) for d ancestries. 
 # known_freq need to be a named vector, specifying known frequencies. The names of elements 
 # in known_freq are some of the column names of prop_mat. 
-estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_freqs, confidence = 0.95, 
+estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_freqs, 
+                                               confidence = 0.95, 
                                             low_freq_bound = 0.001, high_freq_bound = 0.999,
                                             use_smoothing_data = FALSE,
                                             chromosome_x = FALSE,
@@ -63,11 +64,34 @@ estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_fr
   }
   
   
+  return(.estimate_frequencies_w_known_freq_after_prep(allele_counts, 
+                                                       prop_mat, 
+                                                       max_counts,
+                                                       known_freqs, 
+                                                       n_unknown,
+                                                       n_known,
+                                                       low_freq_bound, 
+                                                       high_freq_bound,
+                                                       confidence))
+  
+}
+
+
+
+.estimate_frequencies_w_known_freq_after_prep <- function(allele_counts, 
+                                                          prop_mat, 
+                                                          max_counts,
+                                                          known_freqs, 
+                                                          n_unknown,
+                                                          n_known,
+                                                          low_freq_bound, 
+                                                          high_freq_bound,
+                                                          confidence){
+  
   
   known_sums <- prop_mat[,names(known_freqs), drop = FALSE] %*% known_freqs
   
-  
-  
+
   ## compute the negative log likelihood function
   nll <- function(unknown_freqs){
     allele_probs <- as.numeric(known_sums + prop_mat[,c(n_known+1):ncol(prop_mat), drop = FALSE] %*% unknown_freqs)
@@ -100,9 +124,5 @@ estimate_frequencies_w_known_freqs <- function(allele_counts, prop_mat, known_fr
   return(list(res = res, nll = nll(res$estimated_freq)))
   
 }
-
-
-
-
 
 

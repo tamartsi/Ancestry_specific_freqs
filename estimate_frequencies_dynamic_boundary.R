@@ -71,13 +71,13 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
     high_freq_bound <- 1 - frequency_boundary_grid[ind_grid]
     ## optimize to estimate frequencies
     
-    cur_res <- tryCatch({.estimate_frequencies_after_prep(allele_counts, 
-                                                          prop_mat, 
-                                                          max_counts,
-                                                          freqs,
-                                                          low_freq_bound,
-                                                          high_freq_bound,
-                                                          confidence)},
+    cur_res <- tryCatch({.estimate_frequencies_after_prep(allele_counts = allele_counts, 
+                                                          prop_mat = prop_mat, 
+                                                          max_counts = max_counts,
+                                                          freqs = freqs,
+                                                          low_freq_bound = low_freq_bound,
+                                                          high_freq_bound = high_freq_bound,
+                                                          confidence = confidence)},
                         error = function(error){
                           "not converged"
                         }

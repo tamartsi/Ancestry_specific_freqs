@@ -156,7 +156,7 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
   
   # at this point: some frequencies but not all were estimated at the boundary
   boundary_res <- 
-    .estimate_frequencies_w_known_freq_after_prep(allele_counts = allele_counts, 
+    tryCatch({.estimate_frequencies_w_known_freq_after_prep(allele_counts = allele_counts, 
                                                   prop_mat = prop_mat, 
                                                   max_counts = max_counts,
                                                   known_freqs= set_freqs, 
@@ -164,8 +164,17 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
                                                   n_known = length(set_freqs),
                                                   low_freq_bound = low_freq_bound, 
                                                   high_freq_bound = high_freq_bound,
-                                                  confidence = confidence)
-
+                                                  confidence = confidence)},
+             error = function(error){
+               "not converged"
+             }
+    )
+    # if this did not converge...
+    if (identical(boundary_res, "not converged")){
+     return(potential_return_val_converged)
+    }
+  
+    # if it did converge, continue...
   
     if (boundary_res$nll < cur_res$nll) {
       # we need to return the new result, with the estimated 

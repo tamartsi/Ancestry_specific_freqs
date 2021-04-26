@@ -120,13 +120,13 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
   # if frequencies for some ancestries were estimated right at the lower bound:
   if (length(low_bound_inds) >0){
       set_freqs <- rep(0, length = length(low_bound_inds))
-      names(set_freqs) <- res$ancestry[low_bound_inds]
+      names(set_freqs) <- cur_res$res$ancestry[low_bound_inds]
     }
   
   # if frequencies for some ancestries were estimated right at the high bound:
   if (length(high_bound_inds) >0 ){
       set_freqs_high <- rep(1, length = length(high_bound_inds))
-      names(set_freqs_high) <- res$ancestry[high_bound_inds]
+      names(set_freqs_high) <- cur_res$res$ancestry[high_bound_inds]
       
       # should we augment a previous vector, and have a new set_freqs vector?
       if (length(low_bound_inds) > 0){
@@ -162,8 +162,8 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
                                                   known_freqs= set_freqs, 
                                                   n_unknown = ncol(prop_mat) - length(set_freqs),
                                                   n_known = length(set_freqs),
-                                                  low_freq_bound = requency_boundary_grid[1], 
-                                                  high_freq_bound = 1-frequency_boundary_grid[1],
+                                                  low_freq_bound = low_freq_bound, 
+                                                  high_freq_bound = high_freq_bound,
                                                   confidence = confidence)
 
   

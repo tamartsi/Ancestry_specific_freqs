@@ -142,7 +142,7 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
     like_by_obs <- dbinom_approx(allele_counts, max_counts, allele_probs)
     
     # check if we have an impossible value (probability zero)
-    if (sum(like_by_obs == 0) > 0) return(potential_return_val_converged)
+    if (sum(like_by_obs == 0) > 0, na.rm = TRUE) return(potential_return_val_converged)
     
     nll <- -sum(log(like_by_obs))
     

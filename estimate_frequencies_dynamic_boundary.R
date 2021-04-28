@@ -139,8 +139,12 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
   # first: if all frequencies were estimated at the boundary:
   if (length(set_freqs) == ncol(prop_mat)){
     allele_probs <- prop_mat[,names(set_freqs), drop = FALSE] %*% set_freqs
-    nll_by_obs <- log(dbinom_approx(allele_counts, max_counts, allele_probs))
-    nll <- -sum(nll_by_obs)
+    like_by_obs <- dbinom_approx(allele_counts, max_counts, allele_probs)
+    
+    # check if we have an impossible value (probability zero)
+    if (sum(like_by_obs == 0) > 0) return(potential_return_val_converged)
+    
+    nll <- -sum(log(like_by_obs))
     
     if (nll < potential_return_val_converged$nll){
       return_val <- return_val_not_run

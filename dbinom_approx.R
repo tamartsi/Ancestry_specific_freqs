@@ -5,10 +5,10 @@
 dbinom_approx <- function(x, size, prob){
   
   # add checks to account for numerical error
-  if (prob > 1 + 1e-10 | prob < -1e-10) 
+  if (sum(prob > 1 + 1e-10 | prob < -1e-10) > 0)  
     stop("probability higher than 1 or lower than 0")
-  if (prob > 1) prob <- 1 
-  if (prob < 0) prob <- 0
+  prob <- ifelse(prob > 1, 1, prob)
+  prob <- ifelse(prob <0 , 0, prob)
   
   arg2 <- prob^(x)*(1-prob)^(size-x)
   

@@ -74,7 +74,6 @@ estimate_frequencies_dynamic_boundary <- function(allele_counts, prop_mat, confi
     cur_res <- tryCatch({.estimate_frequencies_after_prep(allele_counts = allele_counts, 
                                                           prop_mat = prop_mat, 
                                                           max_counts = max_counts,
-                                                          freqs = freqs,
                                                           low_freq_bound = low_freq_bound,
                                                           high_freq_bound = high_freq_bound,
                                                           confidence = confidence)},

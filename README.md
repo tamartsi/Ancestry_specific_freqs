@@ -20,12 +20,12 @@ Each files has a few columns, as follows:
 - Africa_estimated_freq:	Estimated African frequency 
 - Africa_low_CI:	Low point of the 95% CI of the African frequency
 - Africa_high_CI:	High point of the 95% CI of the African frequency
-- Europe_estimated_freq:	European frequency estimation 
-- Europe_low_CI:	European lower confidence interval estimation 
-- Europe_high_CI:	European higher confidence interval estimation 
-- America_estimated_freq:	Amerindian frequency estimation 
-- America_low_CI:	Amerindian lower confidence interval estimation 
-- America_high_CI:	Amerindian higher confidence interval estimation 
+- Europe_estimated_freq:	Estimated European frequency
+- Europe_low_CI:	Low point of the 95% CI of the European frequency 
+- Europe_high_CI:	High point of the 95% CI of the European frequency
+- America_estimated_freq:	Estimated Amerindian frequency 
+- America_low_CI:	Low point of the 95% CI of the Amerindian frequency
+- America_high_CI:	High point of the 95% CI of the Amerindian frequency
 - boundary:	Boundary condition used when the function converges. 
 - imputed:	Imputed genotype
 - R2:	Squared correlation between input genotypes and imputed dosages

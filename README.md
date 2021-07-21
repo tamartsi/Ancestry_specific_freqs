@@ -1,40 +1,23 @@
 # About this repository 
-The repository provides workflows described in the Common Workflow Language open standard, for "AFA": Computationally efficient Ancestral Frequency estimation in Admixed populations. 
-"AFA" computes ancestry-specific allele frequencies in admixed populations using maximum likelihood estimation by modeling the conditional probability of having an allele given proportions of genetic ancestries. The method can use either local proportion ancestries, "LAFA", or global ancestry proportions "GAFA".  
+The repository provides code for "AFA": Computationally efficient Ancestral Frequency estimation in Admixed populations. "AFA" computes ancestry-specific allele frequencies in admixed populations using maximum likelihood estimation. The method can use either local proportion ancestries, "LAFA", or global ancestry proportions "GAFA". The repository also provides a dataset of U.S. Hispanic/Latino ancestry-specific allele frequencies and their confidence intervals estimated based on the Hispanic Community Health Study/Study of Latinos (HCHS/SOL) using "GAFA" and "LAFA". HCHS/SOL is an admixed population with three predominant ancestries: Amerindian, European, and African. The estimates are based on HCHS/SOL imputed data. 
+
 # Contact information: 
 Tamar Sofer:  tsofer@bwh.harvard.edu
 Einat Granot-Hershkovitz:  egranot-hershkovitz@bwh.harvard.edu
-# Required input for ancestry-global-proportion.cwl (GAFA):
--	plist: A data.frame with two columns (Split each gds file into blocks of 3,000 variants to calculate number of blocks in each chromosome):
-1.	chromosome number
-2.	block number
 
--	global_ancestry: a data.frame with a subject ID column, and an additional column for each of the ancestral proportions.
--	chromosome_gds: a SeqArray gds file. 
--	Annotation: a data.frame with a subject ID column, and a genetic consent column. 
--	myIndex – a number for running a specific job (one block). 
--	unrel – a data.frame with a subject ID column that includes unrelated individuals only. 
-LAFA: This workflow calculates the ancestry-specific allele frequencies of bi-allelic genetic variants in admixed populations, based on local proportion ancestries. This workflow is specific for a three-way admixed population but can be adapted to any number of ancestries. 
-# Required input for ancestry-local-proportion.cwl (LAFA):
--	plist: A data.frame with two columns (Split each gds file into blocks of 3,000 variants to calculate number of blocks in each chromosome):
-1.	chromosome number
-2.	block number
--	chromosome_gds: a SeqArray gds file. 
--	myIndex – a number for running a specific job (one block). 
--	unrel – a data.frame with a subject ID column that includes unrelated individuals only. 
--	African local ancestry file: a data.frame, each row represents one individual, each column represents one African local ancestry interval, taking a value of 0/1/2. This file only includes individuals with genetic consent. 
--	European local ancestry file: a data.frame, each row represents one individual, each column represents one European local ancestry interval, taking a value of 0/1/2. This file only includes individuals with genetic consent. 
--	Amerindian local ancestry file: a data.frame, each row represents one individual, each column represents one Amerindian local ancestry interval, taking a value of 0/1/2. This file only includes individuals with genetic consent. 
--	Annotation: an RData file with information on the Local ancestry intervals:
-1.	chromosome: Chromosome no.
-2.	pos.start 
-3.	pos.end	
-4.	snpID
+# Code
+This folder provides functions to compute ancestry-specific allele frequencies, as well as code for simulations, and some tests/examples. 
 
--	chain file- liftover from hg38 to hg19 (in order to match each variant to its local ancestry interval, using the same assembly). 
+# HCHS_SOL_GAFA_estimates
+This folder provides compressed files for 23 chromosomes with U.S. Hispanic/Latino ancestry-specific allele frequencies and their confidence intervals estimated based on the HCHS/SOL using "GAFA". "GAFA" method uses global ancestry estimates: estimated proportion of genomes inherited from each of the ancestral population used. 
 
-#Output file column annotation
-Each of the files has the following  columns: 
+# HCHS_SOL_LAFA_estimates
+This folder provides compressed files for 23 chromosomes with U.S. Hispanic/Latino ancestry-specific allele frequencies and their confidence intervals estimated based on the HCHS/SOL using "LAFA". "LAFA" method uses local ancestry interval estimates which were previously inferred using the RFMix software. Overall, 15,500 local ancestry intervals are dispersed throughout the genome and are used as proportions of genetic ancestry for variants located in the intervals. 
+Local ancestry intervals (LAIs)
+Three-way LAI (Amerindian, African, and European) were previously inferred in 12,793 HCHS/SOL individuals using the RFMix software with a reference panel derived from the combination of the Human Genome Diversity Project (HGDP) and the 1000 Genome Project (using the GRCh37 assembly) representing the relevant ancestral populations20. Overall, 15,500 are LAIs dispersed throughout the genome (14,815 LAI in autosomal chromosomes),
+# Column annotation of the compressed 23 chromosomal files providing ancestry-specific allele frequencies:
+
+Each file has a few columns, as follows: 
 - CHR:	Chromosome number
 - POS:	Chromosomal position (hg38)
 - allele_a:	Reference allele
@@ -52,3 +35,5 @@ Each of the files has the following  columns:
 - imputed:	Imputed genotype
 - R2:	Squared correlation between input genotypes and imputed dosages
 
+# Acknowledgements
+We thank the staff and participants of the Hispanic Community Health Study/Study of Latinos for their important contributions.

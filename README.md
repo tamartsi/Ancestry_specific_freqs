@@ -1,18 +1,18 @@
 # About this repository 
-A repository provide code for computing ancestry-specific allele frequencies in admixed populations using maximum likelihood estimation, and results from employing the code to estimates European, African, and Amerindian allele frequencies using Hispanic/Latino genomes from the Hispanic Community Health Study/Study of Latinos. 
+The repository provides code for "AFA": Computationally efficient Ancestral Frequency estimation in Admixed populations. "AFA" computes ancestry-specific allele frequencies in admixed populations using maximum likelihood estimation. The method can use either local proportion ancestries, "LAFA", or global ancestry proportions "GAFA". The repository also provides a dataset of U.S. Hispanic/Latino ancestry-specific allele frequencies and their confidence intervals estimated based on the Hispanic Community Health Study/Study of Latinos (HCHS/SOL) using "GAFA" and "LAFA". HCHS/SOL is an admixed population with three predominant ancestries: Amerindian, European, and African. The estimates are based on HCHS/SOL imputed data. 
 
 # Code
-Functions to compute ancestry-specific allele frequencies, as well as code for simulations, and some tests/examples, is provided in the Code folder. 
+This folder provides functions to compute ancestry-specific allele frequencies, as well as code for simulations, and some tests/examples. 
 
 # HCHS_SOL_GAFA_estimates
-This folder provides compressed files with ancestry-specific allele frequencies estimated using the "GAFA" method, which uses global ancestry estimates: estimated proportion of genomes inherited from each of the ancestral population used. The estimates are based on imputed data from the HCHS/SOL. See folder for information about columns. 
-
+This folder provides compressed files for 23 chromosomes with U.S. Hispanic/Latino ancestry-specific allele frequencies and their confidence intervals estimated based on the HCHS/SOL using "GAFA". "GAFA" method uses global ancestry estimates: estimated proportion of genomes inherited from each of the ancestral population used. 
 
 # HCHS_SOL_LAFA_estimates
-This folder provides compressed files with ancestry-specific allele frequencies estimated using the "LAFA" method, which uses local ancestry estimates: for each of over 14,000 genomic intervals annotated, each person was assigned, using RFMix ancestral origin of these intervals in their two chromosome (or one chromosomal copy in the case of chromosome X). These are used as proportions of genetic ancestry in the intervals. The estimates are based on imputed data from the HCHS/SOL. See folder for information about columns. 
+This folder provides compressed files for 23 chromosomes with U.S. Hispanic/Latino ancestry-specific allele frequencies and their confidence intervals estimated based on the HCHS/SOL using "LAFA". "LAFA" method uses local ancestry interval estimates which were previously inferred using the RFMix software. Overall, 15,500 local ancestry intervals are dispersed throughout the genome and are used as proportions of genetic ancestry for variants located in the concordant interval. 
 
-# Description of files providing ancestry-specific allele frequencies
-Each files has a few columns, as follows: 
+# Column annotation of the compressed 23 chromosomal files providing ancestry-specific allele frequencies:
+
+Each file has a few columns, as follows: 
 - CHR:	Chromosome number
 - POS:	Chromosomal position (hg38)
 - allele_a:	Reference allele

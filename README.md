@@ -32,8 +32,8 @@ Each file has a few columns, as follows:
 - America_low_CI:	Low point of the 95% CI of the Amerindian frequency
 - America_high_CI:	High point of the 95% CI of the Amerindian frequency
 - boundary:	Boundary condition used when the function converges. 
-- imputed:	Imputed genotype
-- R2:	Squared correlation between input genotypes and imputed dosages
+- imputed: Imputed genotype
+- R2:	Imputation quality
 
 # Acknowledgements
 We thank the staff and participants of the Hispanic Community Health Study/Study of Latinos for their important contributions.

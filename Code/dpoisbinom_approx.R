@@ -34,6 +34,8 @@ dpoisbinom_approx <- function(x, prob1, prob2 = NULL){
     prob2 <- ifelse(prob2 < 0 , 0, prob2)
     
     dat <- cbind(dat, prob2)
+    stopifnot(all(x>=0 & 
+          x <= apply(dat, 1, function(x) sum(!is.na(x[c("prob1", "prob2")])))))
   }
   
   if (is.null(prob2)) stopifnot(all(x>= 0 & x<=1))

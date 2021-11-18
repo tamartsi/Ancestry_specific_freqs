@@ -37,9 +37,10 @@ estimate_frequencies_pb <- function(allele_counts, prop_mat, confidence = 0.95,
                                               sex = sex, 
                                               male_label = male_label)
   
-  prop_mat <- prep_dat$prop_mat
+  ancestry1 <- prep_dat$ancestry1
+  ancestry2 <- prep_dat$ancestry2
   allele_counts <- prep_dat$allele_counts
-  max_counts <- prep_dat$max_counts
+
   
   # check if the number of minor alleles is higher than the mac_filter,
   # stop if MAC is too low.
@@ -113,8 +114,3 @@ estimate_frequencies_pb <- function(allele_counts, prop_mat, confidence = 0.95,
 }
 
 
-## test
-ancestry1 <- c("a1", "a2", "a1", "a3", "a4", "a1", "a2", "a1")
-freqs <- c(0.1, 0.2, 0.1, 0.6)
-names(freqs) <- paste0("a", 1:4)
-probs1 <- freqs[ancestry1]

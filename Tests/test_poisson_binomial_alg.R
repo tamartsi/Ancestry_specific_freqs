@@ -158,3 +158,26 @@ identical(res1, res2)
                                                "M", "M", "M", "M",
                                                "M"), 
                                        male_label = "M")
+
+
+estimate_frequencies_pb(allele_counts = c(1, 2,0,0,
+                                          2,0,0,0,
+                                          2),
+                        ancestry1 = c("a1", "a1", "a2", "a2", 
+                                      "a1", "a2", "a2", "a2", 
+                                      "a2"),
+                        ancestry2 = c("a1", "a1", "a2", "a2",
+                                      "a1", "a1", "a2", "a2", 
+                                      "a1"))
+
+
+estimate_frequencies_pb(allele_counts = c(1, 2,0,0,
+                                          2,0,0,0,
+                                          2, 1, 1,2),
+                        ancestry1 = c("a1", "a1", "a2", "a2", 
+                                      "a1", "a2", "a2", "a2", 
+                                      "a2", "a1", "a1", "a2"),
+                        ancestry2 = c("a1", "a1", "a2", "a2",
+                                      "a1", "a1", "a2", "a2", 
+                                      "a1", "a1", "a2", "a2"), 
+                        use_smoothing_data = TRUE)

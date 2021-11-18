@@ -79,11 +79,13 @@ estimate_frequencies_pb <- function(allele_counts,
   
   # add made-up data to avoid boundaries of the frequency parameter space   
   if (use_smoothing_data){
-    smoothing_data <- .generate_smoothing_observations_lafa(unique(c(ancestry1, ancestry2)),
-                                                            chromosome_x)
+    smoothing_data <- .generate_smoothing_observations_lafa(unique(c(ancestry1, ancestry2)))
     allele_counts <- c(allele_counts, smoothing_data$simulated_allele_count)
-    ancestry1 <- c(ancestry1, smoothing_data$ancestry1)
-    ancestry2 <- c(ancestry2, smoothing_data$ancestry2)
+    ancestry1 <- c(ancestry1, smoothing_data$simulated_ancestry1)
+    
+    if (!is.null(ancestry2)){
+      ancestry2 <- c(ancestry2, rep(NA, length(smoothing_data$simulated_ancestry1)))
+    }
   }
   
   
@@ -113,12 +115,17 @@ estimate_frequencies_pb <- function(allele_counts,
                                              high_freq_bound,
                                              confidence){
   
-  ancestry_names <- unique(c(ancestry1, ancestry2))
+  ancestry_names <- na.omit(unique(c(ancestry1, ancestry2)))
   n_ancestry <- length(ancestry_names)
   ## compute the negative log likelihood function
   nll <- function(freqs){
     names(freqs) <- ancestry_names
     prob1 <- freqs[ancestry1]
+    if (!is.null(ancestry2)){
+      prob2 <- freqs[ancestry2]
+    }  else{
+      prob2 <- NULL
+    }
     # prob1 and prob2 should be a function of freqs...
     nll_by_obs <- log(dpoisbinom_approx(allele_counts, prob1, prob2))
     return(-sum(nll_by_obs))		

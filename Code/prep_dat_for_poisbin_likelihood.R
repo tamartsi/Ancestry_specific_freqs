@@ -1,42 +1,44 @@
 
-# update this function to prepare data for using LAFA with 
+# This function prepares data for using LAFA with 
 # Poisson Binomial likelihood
+# when the variant is on chromosome x
 
-.prep_dat_for_poisbin_likelihood <- function(allele_counts, prop_mat,  
-                                            chromosome_x = FALSE,
-                                            sex = NULL, 
-                                            male_label = "M"){
-  max_counts <- rep(NA, length(allele_counts))
-  # If alleles are from chromosome X, need to be separately handled for males and females.
-  if (chromosome_x){
+# instead of using "prop_mat", we now directly use vectors ancestry1, ancestry2.
+# these vectors provide ancestry in one chromosomal copy, and in a second chromosomal
+# copy. They are not aligned with allele counts (we don't know which ancestry 
+# an allele is from).
+
+# this function assumes that males only have ancestry1, and ancestry2 = NA for males.
+
+.prep_dat_for_poisbin_likelihood_chr_x <- function(allele_counts, 
+                                             ancestry1, 
+                                             ancestry2 = NULL,
+                                             sex, 
+                                             male_label = "M"){
+  
     stopifnot(length(allele_counts) == length(sex))
-    male_counts <- allele_counts[which(sex == male_label)]
-    male_props <- prop_mat[which(sex == male_label),]
-    
+    male_inds <- which(sex == male_label)
+  
     # check that male counts are not higher than one (imputed data may have fractions)
     # if some dosages are higher than 1, divided all dosages/counts by 2. 
-    max_male_dosage <- max(male_counts)
+    max_male_dosage <- max(allele_counts[male_inds])
     if (max_male_dosage > 1){
       message("some male allele counts/dosages are larger than 1, dividing all counts by two...")
-      male_counts <- male_counts/2
+      allele_counts[male_inds] <- allele_counts[male_inds]/2
+    }  
+    
+    ## if all individuals are males, we don't need ancestry2 at all:
+    if (length(male_inds) == length(allele_counts)){
+      return(list(allele_counts = allele_counts, 
+                  ancestry1 = ancestry1, 
+                  ancestry2 = NULL))
     }
     
-    female_counts <- allele_counts[which(sex != male_label)]
-    female_props <- prop_mat[which(sex != male_label),]
+    ## if there are some females and some males, set ancestry2 of males to NA
+    ancestry2[male_inds] <- NA  
     
-    # merge male and females:
-    prop_mat <- rbind(male_props, female_props)
-    allele_counts <- c(male_counts, female_counts)
-    max_counts <- c(rep(1, length(male_counts)), rep(2, length(female_counts)))
-  } else{  # not chromosome X
-    
-    # just add max_count
-    max_counts <- rep(2, nrow(prop_mat))
-    
-  }
-  
-  return(list(allele_counts = allele_counts, 
-              ancestry1 = ancestry1, 
-              ancestry2 = ancestry2))
-  
+    return(list(allele_counts = allele_counts, 
+                ancestry1 = ancestry1, 
+                ancestry2 = ancestry2))
+
 }

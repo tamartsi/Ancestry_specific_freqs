@@ -125,3 +125,36 @@ identical(res1, res2)
                                     high_freq_bound = 0.99,
                                     confidence = 0.95)
 # it worked! 
+
+
+# this needs to change counts of 2 in males to 1, 
+# and set ancestry2 for males to NA.
+.prep_dat_for_poisbin_likelihood_chr_x(allele_counts = c(1, 0,0,0,
+                                                         2,0,0,0,
+                                                         2),
+                                       ancestry1 = c("a1", "a1", "a2", "a2", 
+                                                     "a1", "a2", "a2", "a2", 
+                                                     "a2"),
+                                       ancestry2 = c("a1", "a1", "a2", "a2",
+                                                     "a1", "a1", "a2", "a2", 
+                                                     "a1"),
+                                       sex = c("F", "F", "F", "F",
+                                               "M", "F", "F", "M",
+                                               "M"), 
+                                       male_label = "M")
+
+
+# all are males, ancestry2 is set to NULL, all counts are divided by half.
+.prep_dat_for_poisbin_likelihood_chr_x(allele_counts = c(1, 0,0,0,
+                                                         2,0,0,0,
+                                                         2),
+                                       ancestry1 = c("a1", "a1", "a2", "a2", 
+                                                     "a1", "a2", "a2", "a2", 
+                                                     "a2"),
+                                       ancestry2 = c("a1", "a1", "a2", "a2",
+                                                     "a1", "a1", "a2", "a2", 
+                                                     "a1"),
+                                       sex = c("M", "M", "M", "M",
+                                               "M", "M", "M", "M",
+                                               "M"), 
+                                       male_label = "M")

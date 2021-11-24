@@ -226,3 +226,19 @@ LAFA_dynamic_boundary(allele_counts = c(1, 1,2,0,
                       ancestry2 = c("a1", "a1", "a2", "a2",
                                     "a1", "a1", "a2", "a2", 
                                     "a1", "a2", "a2", "a3", "a3", rep("a3",200)))
+
+# this converges-- great
+
+
+estimate_frequencies_pb(allele_counts = c(1, 2,0,0,
+                                          2,0,0,0,
+                                          2, rep(0,200)),
+                        ancestry1 = c("a1", "a1", "a2", "a2", 
+                                      "a1", "a2", "a2", "a2", 
+                                      "a2", rep("a3",200)),
+                        ancestry2 = c("a1", "a1", "a2", "a2",
+                                      "a1", "a1", "a2", "a2", 
+                                      "a1", rep("a3",200)))
+# this one, without dynamic boundary, gave an error (error with dpoisbinom_approx, 
+# apparently estimated probabilities were below 0 or higher than 1 at some point) 
+# if removing the observations with a3, it does run okay.

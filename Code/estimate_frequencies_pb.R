@@ -20,7 +20,8 @@ estimate_frequencies_pb <- function(allele_counts,
                                  chromosome_x = FALSE,
                                  sex = NULL, 
                                  male_label = "M", 
-                                 mac_filter = 5){
+                                 mac_filter = 5, 
+                                 ancestry_names = NULL){
   stopifnot(length(allele_counts) == length(ancestry1))
   
   
@@ -92,12 +93,18 @@ estimate_frequencies_pb <- function(allele_counts,
   ## update to function that uses Poisson-Binomial 
   ## if this works we will merge it better and add "lafa" for a method
   ## as an argument.
-  return(.estimate_frequencies_after_prep_pb(allele_counts, 
-                                          ancestry1,
-                                          ancestry2,
-                                          low_freq_bound,
-                                          high_freq_bound,
-                                          confidence))
+  out <- .estimate_frequencies_after_prep_pb(allele_counts, 
+                                             ancestry1,
+                                             ancestry2,
+                                             low_freq_bound,
+                                             high_freq_bound,
+                                             confidence)
+  
+  if (!is.null(ancestry_names)){
+    out$res <- res[match(ancestry_names, res$ancestry),]
+    out$res$ancestry <- ancestry_names
+  }
+  return(out)
 }
 
 

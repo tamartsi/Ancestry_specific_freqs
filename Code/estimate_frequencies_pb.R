@@ -101,7 +101,7 @@ estimate_frequencies_pb <- function(allele_counts,
                                              confidence)
   
   if (!is.null(ancestry_names)){
-    out$res <- out$res[match(ancestry_names, res$ancestry),]
+    out$res <- out$res[match(ancestry_names, out$res$ancestry),]
     out$res$ancestry <- ancestry_names
   }
   

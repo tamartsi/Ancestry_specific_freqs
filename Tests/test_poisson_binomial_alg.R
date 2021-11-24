@@ -181,3 +181,48 @@ estimate_frequencies_pb(allele_counts = c(1, 2,0,0,
                                       "a1", "a1", "a2", "a2", 
                                       "a1", "a1", "a2", "a2"), 
                         use_smoothing_data = TRUE)
+
+
+
+
+
+
+.LAFA_w_known_freq_after_prep(allele_counts = c(1, 0,0,0,
+                                                      2,0,0,0,
+                                                      2),
+                                    ancestry1 = c("a1", "a1", "a2", "a2", 
+                                                  "a1", "a2", "a2", "a2", 
+                                                  "a2"), 
+                                    ancestry2 = c("a1", "a1", "a2", "a2",
+                                                  "a1", "a1", "a2", "a2", 
+                                                  "a1"),
+                                    known_freqs = c(a1 = 0.5), 
+                                    n_known=1, 
+                                    n_unknown = 1,
+                                    low_freq_bound  = 0.01,
+                                    high_freq_bound = 0.99,
+                                    confidence = 0.95)
+
+
+
+LAFA_w_known_freqs(allele_counts = c(1, 1,2,0,
+                                      2,0,0,0,
+                                       2),
+                             ancestry1 = c("a1", "a1", "a2", "a2", 
+                                           "a1", "a2", "a2", "a2", 
+                                           "a2"), 
+                             ancestry2 = c("a1", "a1", "a2", "a2",
+                                           "a1", "a1", "a2", "a2", 
+                                           "a1"),
+                             known_freqs = c(a1 = 0.5))
+
+
+LAFA_dynamic_boundary(allele_counts = c(1, 1,2,0,
+                                        2,0,0,0,
+                                        2, 0, 0, 0, 0, rep(0,200)),
+                      ancestry1 = c("a1", "a1", "a2", "a2", 
+                                    "a1", "a2", "a2", "a2", 
+                                    "a2", "a3", "a2", "a3", "a3", rep("a3",200)), 
+                      ancestry2 = c("a1", "a1", "a2", "a2",
+                                    "a1", "a1", "a2", "a2", 
+                                    "a1", "a2", "a2", "a3", "a3", rep("a3",200)))

@@ -97,7 +97,7 @@ LAFA_w_known_freqs <- function(allele_counts,
   
   out <- .LAFA_w_known_freq_after_prep(allele_counts, 
                                        ancestry1, 
-                                       ancestry2 = NULL,
+                                       ancestry2 = ancestry2,
                                        known_freqs, 
                                        n_unknown,
                                        n_known,
@@ -106,6 +106,7 @@ LAFA_w_known_freqs <- function(allele_counts,
                                        confidence)
   out$res <- out$res[match(ancestry_names, out$res$ancestry),]
   out$res$ancestry <- ancestry_names
+  out$res$estimated_freq[match(names(known_freqs), out$res$ancestry)] <- known_freqs
   return(out)
   
 }

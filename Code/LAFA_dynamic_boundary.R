@@ -7,8 +7,7 @@
 # compares the likelihood to the likelihood when the frequencies are set at the 
 # boundaries of the parameter space (0 or 1, as needed).
 
-### LAFA update #### (need to update documentation above)
-## Tamar needs to continue editting from line 178
+### LAFA update #### (need to update documentation above; check/test)
 
 LAFA_dynamic_boundary <- function(allele_counts, 
                                   ancestry1, 
@@ -165,8 +164,14 @@ LAFA_dynamic_boundary <- function(allele_counts,
  
   # first: if all frequencies were estimated at the boundary:
   if (length(set_freqs) == length(ancestry_names)){
-    allele_probs <- prop_mat[,names(set_freqs), drop = FALSE] %*% set_freqs
-    like_by_obs <- dbinom_approx(allele_counts, max_counts, allele_probs)
+    prob1 <- set_freqs[ancestry1]
+    if (!is.null(ancestry2)){
+      prob2 <- set_freqs[ancestry2]
+    }  else{
+      prob2 <- NULL
+    }
+    like_by_obs <- dpoisbinom_approx(allele_counts, prob1, prob2)
+
     
     # check if we have an impossible value (probability zero)
     if (sum(like_by_obs == 0) > 0) return(potential_return_val_converged)
@@ -187,15 +192,15 @@ LAFA_dynamic_boundary <- function(allele_counts,
   
   # at this point: some frequencies but not all were estimated at the boundary
   boundary_res <- 
-    tryCatch({.estimate_frequencies_w_known_freq_after_prep(allele_counts = allele_counts, 
-                                                  prop_mat = prop_mat, 
-                                                  max_counts = max_counts,
-                                                  known_freqs= set_freqs, 
-                                                  n_unknown = ncol(prop_mat) - length(set_freqs),
-                                                  n_known = length(set_freqs),
-                                                  low_freq_bound = low_freq_bound, 
-                                                  high_freq_bound = high_freq_bound,
-                                                  confidence = confidence)},
+    tryCatch({.LAFA_w_known_freq_after_prep(allele_counts, 
+                                            ancestry1, 
+                                            ancestry2 = NULL,
+                                            known_freqs= set_freqs, 
+                                            n_unknown = length(ancestry_names) - length(set_freqs),
+                                            n_known = length(set_freqs),
+                                            low_freq_bound = low_freq_bound, 
+                                            high_freq_bound = high_freq_bound,
+                                            confidence = confidence)},
              error = function(error){
                "not converged"
              }

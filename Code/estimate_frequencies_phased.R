@@ -18,8 +18,8 @@ estimate_frequencies_phased <- function(allele_counts, allele_ancestry,
   copy1_col_allele_counts <- grep(paste0(allele_copy_label, "1"), colnames(allele_counts), value = TRUE)
   copy2_col_allele_counts <- grep(paste0(allele_copy_label, "2"), colnames(allele_counts), value = TRUE)
   
-  copy1_col_allele_ancestry <- grep(paste0(allele_copy_label, "1"), colnames(alleles_ancestry), value = TRUE)
-  copy2_col_allele_ancestry <- grep(paste0(allele_copy_label, "2"), colnames(alleles_ancestry), value = TRUE)
+  copy1_col_allele_ancestry <- grep(paste0(allele_copy_label, "1"), colnames(allele_ancestry), value = TRUE)
+  copy2_col_allele_ancestry <- grep(paste0(allele_copy_label, "2"), colnames(allele_ancestry), value = TRUE)
   
   allele_counts_formatted <- c(allele_counts[,copy1_col_allele_counts], allele_counts[,copy2_col_allele_counts])
   allele_ancestry_formatted <- c(allele_ancestry[,copy1_col_allele_ancestry], allele_ancestry[,copy2_col_allele_ancestry])

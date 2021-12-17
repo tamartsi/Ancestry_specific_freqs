@@ -42,7 +42,7 @@ estimate_frequencies_phased <- function(allele_counts, allele_ancestry,
   if (use_smoothing_data){
     smoothing_data <- .generate_smoothing_observations(colnames(prop_mat))
     prop_mat <- rbind(prop_mat, smoothing_data$simulated_prop_mat)
-    allele_counts <- c(allele_counts, smoothing_data$simulated_allele_count)
+    allele_counts_formatted <- c(allele_counts_formatted, smoothing_data$simulated_allele_count)
     max_counts <- c(max_counts, rep(1, nrow(smoothing_data$simulated_prop_mat)))
   }
   
